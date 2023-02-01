@@ -41,3 +41,47 @@ length(array1)
 class(array1)
 mode(array1)
 typeof(array1)
+
+
+# Data Frames
+# Dados de diferentes tipos. 
+# Maneira mais fácil de explicar: é uma matriz com diferentes tipos de dados
+
+View(iris)
+
+length(iris)
+class(iris)
+mode(iris)
+typeof(iris)
+
+
+# Listas
+# Coleção de diferentes objetos
+# Com o list diferentes tipos de dado são possíveis e comuns
+
+lista1 = list(a = matriz1, b = vetor1)
+lista1
+
+length(lista1)
+class(lista1)
+mode(lista1)
+typeof(lista1)
+
+
+# Funções também são vistas como objetos em R
+
+funcao1 <- function(x) {
+  var1 <- x * x
+  return(var1)
+}
+
+funcao1(5)
+class(funcao1)
+
+
+# Removendo objetos
+objects()
+
+rm(vetor1)
+
+objects()
