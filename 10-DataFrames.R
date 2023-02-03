@@ -95,21 +95,62 @@ mtcars
 View(mtcars)
 
 
+# Filtro para um subset de dados que atendem a um critério
+
+pesq
+pesq[altura < 1.60,] # filtra com altura menor que 1.60
+pesq[altura > 1.60,] # filtra com altura maior que 1.60
+
+pesq[altura > 1.60, c("codigo", "olhos")] # filtra com altura maior que 1.60 e exibindo apenas colunas codigo e olhos
+pesq
+
+
+# DataFrames nomeados (nomeando DataFrames)
+
+names(pesq) <- c('Pais', 'Nome', 'Altura', 'Código', 'Olhos')
+pesq
+
+# renomeando nome das colunas e linhas
+
+colnames(pesq) <- c('País', 'Col 2', 'Col 3', 'Col 4', 'Col 5')
+rownames(pesq) <- c('Lin 1', 'Lin 2', 'Lin 3', 'Lin 4', 'Lin 5')
+pesq
 
 
 
+# Carregando um arquivo CSV 
+# Iremos criar o arquivo aqui mesmo no RSTudio (ir em File, New File, Text File)
+
+?read.csv
+
+pacientes <- data.frame(read.csv(file = 'pacientes.csv', header = TRUE, sep = ",")) # header = cabeçalho | sep = separador
+pacientes
+
+# Visualizando o dataset
+
+View(pacientes)
+head(pacientes)
+tail(pacientes)
+summary(pacientes)
+
+# Visualizando as variáveis
+
+pacientes$Nome
+pacientes$Idade
+pacientes$Diabete
+pacientes$status
+pacientes$Status
 
 
+# Histograma
+hist(pacientes$Idade)
 
 
+# Combinando dataframes
 
-
-
-
-
-
-
-
+dataset_final <- merge(pesq, pacientes)
+dataset_final
+View(dataset_final)
 
 
 
