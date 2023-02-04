@@ -8,7 +8,7 @@ getwd()
 # Criando matrizes
 
 
-# Número de linhas
+# N�mero de linhas
 
 matrix (c(1,2,3,4,5,6), nr = 2)
 matrix (c(1,2,3,4,5,6), nr = 3)
@@ -23,7 +23,7 @@ matrix (c(1,2,3,4,5,6), nc = 2)
 ?matrix
 
 
-# Matrizes precisam ter um nº de elementos que seja múltiplo do nº de linhas
+# Matrizes precisam ter um n� de elementos que seja múltiplo do nº de linhas
 matrix (c(1,2,3,4,5), nr = 2)
 
 
