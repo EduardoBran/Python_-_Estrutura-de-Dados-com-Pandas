@@ -104,3 +104,7 @@ head(iris)
 summary(iris)
 
 # ---------------------------------------------------------------------------------------------------------
+
+# Exercício 7 - Crie um plot simples usando as duas primeiras colunas do dataframe iris
+
+plot(iris$Sepal.Length, iris$Sepal.Width)
