@@ -153,10 +153,37 @@ summary(dados_full$Nota_Matematica)
 
 # 6) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Redação? (Entregue o resultado em valor absoluto e percentual)
 
+# quantidade
+aprovados_redacao <- dados_full %>% 
+  filter(Nota_Redacao >= 70) %>%
+  count()
+aprovados_redacao                                                   # 33.600
+
+# percentual
+percentual_redacao <- aprovados_redacao / count(dados_full) * 100
+percentual_redacao                                                  # 85.80%
+
+
+# Resposta -> 33.600 aprovados, o que representa cerca de 85.80% do total dos alunos.
+
 
 
 
 # 7) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática? (Entregue o resultado em valor absoluto e percentual)
+
+# quantidade
+aprovados_mat <- dados_full %>% 
+  filter(Nota_Matematica >= 70) %>%
+  count()
+aprovados_mat                                              # 29.360
+
+# percentual
+percentual_mat <- aprovados_mat / count(dados_full) * 100
+percentual_mat                                             # 74.98%
+
+rm(aprovados, percentual)
+
+# Resposta -> 29.360 aprovados, o que representa cerca de 74.98% do total dos alunos.
 
 
 
@@ -164,29 +191,244 @@ summary(dados_full$Nota_Matematica)
 # 8) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática e Redação? (Entregue o resultado em valor absoluto e
 #    percentual)
 
+# quantidade
+aprovados <- dados_full %>% 
+  filter(Nota_Redacao >= 70, 
+         Nota_Matematica >= 70) %>%
+  count()
+aprovados                                           # 25.518
+
+# percentual
+percentual <- aprovados / count(dados_full) * 100
+percentual                                          # 65.16%
+
+# Resposta -> 25.518 aprovados, o que representa cerca de 65.16% do total dos alunos.
 
 
 
-# 9) Crie um dataframe com os resultados das questões de 1 a 8 que você calculou acima. (Dica: crie um dicionário e depois converta em dataframe do
-#    Pandas)
 
+# 9) Crie um dataframe com os resultados das questões de 1 a 8 que você calculou acima.
 
+r1 = length(unique(dados_full$Nome_Escola))
+r2 = length(unique(dados_full$ID_Estudante))
+r3 = sum(dados_escolas$Orcamento_Anual)
+r4 = mean(dados_full$Nota_Redacao)
+r5 = mean(dados_full$Nota_Matematica)
+r6_1 = aprovados_redacao$n
+r6_2 = percentual_redacao$n
+r7_1 = aprovados_mat$n
+r7_2 = percentual_mat$n
+r8_1 = aprovados$n
+r8_2 = percentual$n
 
+df <- data.frame(
+  Total_Escolas = r1,
+  Total_Estudantes = r2,
+  Orcamento_Total_Escolas = r3,
+  Media_Notas_Redacao = r4,
+  Media_Notas_Matematica = r5,
+  Aprovados_Redacao_Total = r6_1,
+  Aprovados_Redacao_Per = r6_2,
+  Aprovados_Matematica_Total = r7_1,
+  Aprovados_Matematica_Per = r7_2,
+  Aprovados_Redacao_e_Mat_Total = r8_1,
+  Aprovados_Redacao_e_Mat_Per = r8_2
+)
+
+rm(aprovados_redacao, percentual_redacao, aprovados_mat, percentual_mat, aprovados, percentual,
+   r1, r2, r3, r4, r5, r6_1, r6_2, r7_1, r7_2, r8_1, r8_2)
+
+df
 
 # 10) Formate as colunas "Total de Estudantes" e "Total Orçamento" ajustando as casas decimais.
+
+df$Total_Estudantes <- formatC(df$Total_Estudantes, format = "d", big.mark = ",")
+df$Orcamento_Total_Escolas <- formatC(df$Orcamento_Total_Escolas, format = "f", big.mark = ",", digits = 2)
+
+df
 
 
 
 
 # 11) Há diferença na performance escolar entre alunos de escolas públicas e particulares?
 
+# Visualizando os Dados
+View(dados_full)
+head(dados_full)
+summary(dados_full)
+str(dados_full$Tipo_Escola)
+summary(dados_full$Tipo_Escola)
 
 
+# Dividindo o dataframe
+escolas_pub <- dados_full %>% 
+  filter(Tipo_Escola == 'Publica') %>%
+  select(ID_Estudante, Nota_Redacao, Nota_Matematica, Nome_Escola, Numero_Alunos, Orcamento_Anual)
+
+escolas_par <- dados_full %>% 
+  filter(Tipo_Escola == 'Particular') %>%
+  select(ID_Estudante, Nota_Redacao, Nota_Matematica, Nome_Escola, Numero_Alunos, Orcamento_Anual)
+
+
+# Dados de Escolas Públicas
+media_escolas_pub_nota_redacao <- escolas_pub %>% 
+  summarise(media_escolas_pub_nota_redacao = mean(Nota_Redacao))
+media_escolas_pub_nota_redacao
+
+aprovados_escolas_pub_redacao <- escolas_pub %>% 
+  filter(Nota_Redacao >= 70) %>%
+  count()
+aprovados_escolas_pub_redacao
+
+percentual_aprovados_escolas_pub_redacao <- aprovados_escolas_pub_redacao / count(escolas_pub) * 100
+percentual_aprovados_escolas_pub_redacao <- round(percentual_aprovados_escolas_pub_redacao, 2)
+percentual_aprovados_escolas_pub_redacao
+
+media_escolas_pub_nota_mat <- escolas_pub %>% 
+  summarise(media_escolas_pub_nota_mat = mean(Nota_Matematica))
+media_escolas_pub_nota_mat
+
+aprovados_escolas_pub_mat <- escolas_pub %>% 
+  filter(Nota_Matematica >= 70) %>%
+  count()
+aprovados_escolas_pub_mat
+
+percentual_aprovados_escolas_pub_mat <- aprovados_escolas_pub_mat / count(escolas_pub) * 100
+percentual_aprovados_escolas_pub_mat <- round(percentual_aprovados_escolas_pub_mat, 2)
+percentual_aprovados_escolas_pub_mat
+
+aprovados_redacao_e_mat_escola_pub <- escolas_pub %>% 
+  filter(Nota_Redacao >= 70, 
+         Nota_Matematica >= 70) %>%
+  count()
+aprovados_redacao_e_mat_escola_pub    
+
+percentual_aprovados_redacao_e_mat_escola_pub <- aprovados_redacao_e_mat_escola_pub / count(escolas_pub) * 100
+percentual_aprovados_redacao_e_mat_escola_pub <- round(percentual_aprovados_redacao_e_mat_escola_pub, 2)
+percentual_aprovados_redacao_e_mat_escola_pub
+
+orcamento_total_escolas_pub <- dados_escolas %>% 
+  filter(Tipo_Escola == 'Publica') %>% 
+  summarise(Orcamento_Total = sum(Orcamento_Anual))
+orcamento_total_escolas_pub
+
+gasto_medio_pub <- orcamento_total_escolas_pub$Orcamento_Total / sum(unique(as.numeric(as.character(escolas_pub$Numero_Alunos))))
+gasto_medio_pub
+
+total_alunos_pub <- sum(dados_escolas$Numero_Alunos[dados_escolas$Tipo_Escola == 'Publica'])
+gasto_medio_aluno_pub <- round(orcamento_total_escolas_pub$Orcamento_Total / total_alunos_pub, 0)
+gasto_medio_aluno_pub
+
+
+# Dados de Escolas Particular
+media_escolas_par_nota_redacao <- escolas_par %>% 
+  summarise(media_escolas_par_nota_redacao = mean(Nota_Redacao))
+media_escolas_par_nota_redacao
+
+aprovados_escolas_par_redacao <- escolas_par %>% 
+  filter(Nota_Redacao >= 70) %>%
+  count()
+aprovados_escolas_par_redacao
+
+percentual_aprovados_escolas_par_redacao <- aprovados_escolas_par_redacao / count(escolas_par) * 100
+percentual_aprovados_escolas_par_redacao <-  round(percentual_aprovados_escolas_par_redacao, 2)
+percentual_aprovados_escolas_par_redacao
+
+media_escolas_par_nota_mat <- escolas_par %>% 
+  summarise(media_escolas_par_nota_mat = mean(Nota_Matematica))
+media_escolas_par_nota_mat
+
+aprovados_escolas_par_mat <- escolas_par %>% 
+  filter(Nota_Matematica >= 70) %>%
+  count()
+aprovados_escolas_par_mat
+
+percentual_aprovados_escolas_par_mat <- aprovados_escolas_par_mat / count(escolas_par) * 100
+percentual_aprovados_escolas_par_mat <- round(percentual_aprovados_escolas_par_mat, 2)
+percentual_aprovados_escolas_par_mat
+
+aprovados_redacao_e_mat_escola_par <- escolas_par %>% 
+  filter(Nota_Redacao >= 70, 
+         Nota_Matematica >= 70) %>%
+  count()
+aprovados_redacao_e_mat_escola_par    
+
+percentual_aprovados_redacao_e_mat_escola_par <- aprovados_redacao_e_mat_escola_par / count(escolas_par) * 100
+percentual_aprovados_redacao_e_mat_escola_par <- round(percentual_aprovados_redacao_e_mat_escola_par, 2)
+percentual_aprovados_redacao_e_mat_escola_par
+
+orcamento_total_escolas_par <- dados_escolas %>% 
+  filter(Tipo_Escola == 'Particular') %>% 
+  summarise(Orcamento_Total = sum(Orcamento_Anual))
+orcamento_total_escolas_par
+
+total_alunos_par <- sum(dados_escolas$Numero_Alunos[dados_escolas$Tipo_Escola == 'Particular'])
+gasto_medio_aluno_par <- round(orcamento_total_escolas_par$Orcamento_Total / total_alunos_par, 0)
+gasto_medio_aluno_par
+
+
+
+# Criando dataframe com todos os dados
+dados_escolares <- data.frame(Tipo_Escola = c('Pública', 'Particular'),
+                        Qtd_Registros = c(nrow(escolas_pub),
+                                          nrow(escolas_par)),
+                        Media_Nota_Redacao = c(media_escolas_pub_nota_redacao$media_escolas_pub_nota_redacao,
+                                               media_escolas_par_nota_redacao$media_escolas_par_nota_redacao),
+                        Total_Apr_Redacao = c(aprovados_escolas_pub_redacao$n,
+                                              aprovados_escolas_par_redacao$n),
+                        Per_Apr_Redacao = c(percentual_aprovados_escolas_pub_redacao$n,
+                                            percentual_aprovados_escolas_par_redacao$n),
+                        Media_Nota_Matematica = c(media_escolas_pub_nota_mat$media_escolas_pub_nota_mat,
+                                                  media_escolas_par_nota_mat$media_escolas_par_nota_mat),
+                        Total_Apr_Matematica = c(aprovados_escolas_pub_mat$n,
+                                                 aprovados_escolas_par_mat$n),
+                        Per_Apr_Matematica = c(percentual_aprovados_escolas_pub_mat$n,
+                                               percentual_aprovados_escolas_par_mat$n),
+                        Total_Apr_Red_e_Mat = c(aprovados_redacao_e_mat_escola_pub$n,
+                                                aprovados_redacao_e_mat_escola_par$n),
+                        Per_Apr_Red_e_Mat = c(percentual_aprovados_redacao_e_mat_escola_pub$n,
+                                              percentual_aprovados_redacao_e_mat_escola_par$n),
+                        Orcamento_Total = c(orcamento_total_escolas_pub$Orcamento_Total,
+                                            orcamento_total_escolas_par$Orcamento_Total),
+                        Gasto_Medio_Por_Aluno = c(gasto_medio_aluno_pub,
+                                                  gasto_medio_aluno_par))
+
+View(dados_escolares)
+
+# Resposta -> Sim, há diferenças signifcativas na performance escolar entre alunos de escolas públicas e particulares.
+
+
+head(escolas_pub)
+summary(escolas_pub)
+head(escolas_par)
+summary(escolas_par)
 
 # 12) O que diferencia as escolas que formam alunos de alta performance?
 
+notas_escolas_pub <- escolas_pub %>%
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_redacao = mean(Nota_Redacao),
+            media_nota_matematica = mean(Nota_Matematica)) %>%
+  left_join(dados_escolas, by = "Nome_Escola")
+
+notas_escolas_par <- escolas_par %>%
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_redacao = mean(Nota_Redacao),
+            media_nota_matematica = mean(Nota_Matematica)) %>%
+  left_join(dados_escolas, by = "Nome_Escola")
+
+# Adicionando colunas 'gasto_por_aluno'
+notas_escolas_pub <- notas_escolas_pub %>%
+  mutate(gasto_por_aluno = Orcamento_Anual / Numero_Alunos)
+notas_escolas_par <- notas_escolas_par %>%
+  mutate(gasto_por_aluno = Orcamento_Anual / Numero_Alunos)
+
+# Unindo dataframes
+ambos <- as.data.frame(bind_rows(notas_escolas_pub, notas_escolas_par))
+ambos
 
 
+dados_escolas
 
 # 13) Escolas (públicas ou particulares) com orçamentos mais altos tem alunos com melhores resultados nos testes de Matemática e Redação?
 
