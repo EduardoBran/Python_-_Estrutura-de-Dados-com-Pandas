@@ -403,6 +403,9 @@ summary(escolas_pub)
 head(escolas_par)
 summary(escolas_par)
 
+
+
+
 # 12) O que diferencia as escolas que formam alunos de alta performance?
 
 notas_escolas_pub <- escolas_pub %>%
@@ -426,12 +429,51 @@ notas_escolas_par <- notas_escolas_par %>%
 # Unindo dataframes
 ambos <- as.data.frame(bind_rows(notas_escolas_pub, notas_escolas_par))
 ambos
+# View(ambos)
 
 
-dados_escolas
+# Definindo um limiar para alta performance (exemplo: média das notas >= 80)
+limiar_alta_performance <- 80
+
+# Identificando escolas de alta performance
+escolas_alta_performance <- ambos %>%
+  filter(media_nota_redacao >= limiar_alta_performance & media_nota_matematica >= limiar_alta_performance)
+
+# Analisando escolas de alta performance
+summary(escolas_alta_performance)
+
+# Verificando a relação entre gasto por aluno e alta performance
+cor.test(escolas_alta_performance$gasto_por_aluno, escolas_alta_performance$media_nota_matematica)
+cor.test(escolas_alta_performance$gasto_por_aluno, escolas_alta_performance$media_nota_redacao)
+
+# Verificando a distribuição de escolas públicas e particulares entre as de alta performance
+table(escolas_alta_performance$Tipo_Escola)
+
+# Resposta -> O Tipo da Escola. Neste caso é o Tipo Particular.
+
+
+
 
 # 13) Escolas (públicas ou particulares) com orçamentos mais altos tem alunos com melhores resultados nos testes de Matemática e Redação?
 
+# Correlação entre o orçamento anual e a média das notas em Redação
+cor_orcamento_redacao <- cor.test(ambos$Orcamento_Anual, ambos$media_nota_redacao, method = "pearson")
+print(cor_orcamento_redacao)
+
+# Correlação entre o orçamento anual e a média das notas em Matemática
+cor_orcamento_matematica <- cor.test(ambos$Orcamento_Anual, ambos$media_nota_matematica, method = "pearson")
+print(cor_orcamento_matematica)
+
+# Correlação entre o gasto por aluno e a média das notas em Redação
+cor_gasto_redacao <- cor.test(ambos$gasto_por_aluno, ambos$media_nota_redacao, method = "pearson")
+print(cor_gasto_redacao)
+
+# Correlação entre o gasto por aluno e a média das notas em Matemática
+cor_gasto_matematica <- cor.test(ambos$gasto_por_aluno, ambos$media_nota_matematica, method = "pearson")
+print(cor_gasto_matematica)
+
+# Resposta -> Esses resultados sugerem que, contrariamente ao que se poderia esperar, escolas com maiores orçamentos ou maiores gastos por aluno 
+#             não necessariamente formam alunos com melhores resultados nos testes de Matemática e Redação.
 
 
 
@@ -440,7 +482,16 @@ dados_escolas
 
 
 
-# 15) Em qual tipo de escola (pública ou particular) há maior índice de aprovação?
+# 15) Em qual tipo de escola (pública ou particular) há maior índice de aprovação? (aprovaçãp = nota >= 70)
 
+# Nas escolas públicas:
+# - Aproximadamente 80.91% dos alunos foram aprovados em Redação.
+# - Aproximadamente 66.52% dos alunos foram aprovados em Matemática.
+# - Aproximadamente 53.7% dos alunos foram aprovados tanto em Redação quanto em Matemática.
 
+# Nas escolas particulares:
+# - Aproximadamente 96.64% dos alunos foram aprovados em Redação.
+# - Aproximadamente 93.7% dos alunos foram aprovados em Matemática.
+# - Aproximadamente 90.55% dos alunos foram aprovados tanto em Redação quanto em Matemática.
 
+# Resposta -> As escolas particulares tem um maior índice de aprovação em comparação com as escolas públicas, tanto em Redação quanto em Matemática.
