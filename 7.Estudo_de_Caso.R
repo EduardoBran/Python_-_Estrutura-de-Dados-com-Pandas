@@ -25,7 +25,7 @@ library(dplyr)          # manipula arquivos
 # - No total serão respondidas perguntas de negócio que vão requerer analisar os dados por diferentes perspectivas.
 
 
-## Perguntas:
+## Perguntas - Parte 1:
 
 #   1) Temos dados de quantas escolas?
 #   2) Qual o total de registros de estudantes na base de dados?
@@ -39,11 +39,6 @@ library(dplyr)          # manipula arquivos
 #   9) Crie um dataframe com os resultados das questões de 1 a 8 que você calculou acima. (Dica: crie um dicionário e depois converta em dataframe do
 #      Pandas)
 #   10) Formate as colunas "Total de Estudantes" e "Total Orçamento" ajustando as casas decimais.
-#   11) Há diferença na performance escolar entre alunos de escolas públicas e particulares?
-#   12) O que diferencia as escolas que formam alunos de alta performance?
-#   13) Escolas (públicas ou particulares) com orçamentos mais altos tem alunos com melhores resultados nos testes de Matemática e Redação?
-#   14) O tamanho da escola (pequeno, médio e grande porte) influencia na performance escolar do aluno?
-#   15) Em qual tipo de escola (pública ou particular) há maior índice de aprovação?
 #   
 # - Vamos usar a Ciência de Dados para responder essas e outras perguntas e analisar dados escolares.
 
@@ -92,7 +87,7 @@ summary(dados_full)
 
 
 
-## Respondendo as Perguntas:
+## Respondendo as Perguntas - Parte 1:
 
 # 1) Temos dados de quantas escolas?
 
@@ -250,7 +245,7 @@ df
 
 
 
-# 11) Há diferença na performance escolar entre alunos de escolas públicas e particulares?
+## Criando e Visualizando Um Novo Dataset
 
 # Visualizando os Dados
 View(dados_full)
@@ -369,129 +364,132 @@ gasto_medio_aluno_par
 
 
 # Criando dataframe com todos os dados
-dados_escolares <- data.frame(Tipo_Escola = c('Pública', 'Particular'),
-                        Qtd_Registros = c(nrow(escolas_pub),
-                                          nrow(escolas_par)),
-                        Media_Nota_Redacao = c(media_escolas_pub_nota_redacao$media_escolas_pub_nota_redacao,
-                                               media_escolas_par_nota_redacao$media_escolas_par_nota_redacao),
-                        Total_Apr_Redacao = c(aprovados_escolas_pub_redacao$n,
-                                              aprovados_escolas_par_redacao$n),
-                        Per_Apr_Redacao = c(percentual_aprovados_escolas_pub_redacao$n,
-                                            percentual_aprovados_escolas_par_redacao$n),
-                        Media_Nota_Matematica = c(media_escolas_pub_nota_mat$media_escolas_pub_nota_mat,
-                                                  media_escolas_par_nota_mat$media_escolas_par_nota_mat),
-                        Total_Apr_Matematica = c(aprovados_escolas_pub_mat$n,
-                                                 aprovados_escolas_par_mat$n),
-                        Per_Apr_Matematica = c(percentual_aprovados_escolas_pub_mat$n,
-                                               percentual_aprovados_escolas_par_mat$n),
-                        Total_Apr_Red_e_Mat = c(aprovados_redacao_e_mat_escola_pub$n,
-                                                aprovados_redacao_e_mat_escola_par$n),
-                        Per_Apr_Red_e_Mat = c(percentual_aprovados_redacao_e_mat_escola_pub$n,
-                                              percentual_aprovados_redacao_e_mat_escola_par$n),
-                        Orcamento_Total = c(orcamento_total_escolas_pub$Orcamento_Total,
-                                            orcamento_total_escolas_par$Orcamento_Total),
-                        Gasto_Medio_Por_Aluno = c(gasto_medio_aluno_pub,
-                                                  gasto_medio_aluno_par))
+dados_escolares <- data.frame(
+  Tipo_Escola = c('Pública',
+                  'Particular'),
+  Qtd_Registros = c(nrow(escolas_pub),
+                    nrow(escolas_par)),
+  Media_Nota_Redacao = c(media_escolas_pub_nota_redacao$media_escolas_pub_nota_redacao,
+                         media_escolas_par_nota_redacao$media_escolas_par_nota_redacao),
+  Total_Apr_Redacao = c(aprovados_escolas_pub_redacao$n,
+                        aprovados_escolas_par_redacao$n),
+  Per_Apr_Redacao = c(percentual_aprovados_escolas_pub_redacao$n,
+                      percentual_aprovados_escolas_par_redacao$n),
+  Media_Nota_Matematica = c(media_escolas_pub_nota_mat$media_escolas_pub_nota_mat,
+                            media_escolas_par_nota_mat$media_escolas_par_nota_mat),
+  Total_Apr_Matematica = c(aprovados_escolas_pub_mat$n,
+                           aprovados_escolas_par_mat$n),
+  Per_Apr_Matematica = c(percentual_aprovados_escolas_pub_mat$n,
+                         percentual_aprovados_escolas_par_mat$n),
+  Total_Apr_Red_e_Mat = c(aprovados_redacao_e_mat_escola_pub$n,
+                          aprovados_redacao_e_mat_escola_par$n),
+  Per_Apr_Red_e_Mat = c(percentual_aprovados_redacao_e_mat_escola_pub$n,
+                        percentual_aprovados_redacao_e_mat_escola_par$n),
+  Orcamento_Total = c(orcamento_total_escolas_pub$Orcamento_Total,
+                      orcamento_total_escolas_par$Orcamento_Total),
+  Gasto_Medio_Por_Aluno = c(gasto_medio_aluno_pub,
+                            gasto_medio_aluno_par))
 
 View(dados_escolares)
 
-# Resposta -> Sim, há diferenças signifcativas na performance escolar entre alunos de escolas públicas e particulares.
-
-
-head(escolas_pub)
-summary(escolas_pub)
-head(escolas_par)
-summary(escolas_par)
 
 
 
-
-# 12) O que diferencia as escolas que formam alunos de alta performance?
-
-notas_escolas_pub <- escolas_pub %>%
-  group_by(Nome_Escola) %>% 
-  summarise(media_nota_redacao = mean(Nota_Redacao),
-            media_nota_matematica = mean(Nota_Matematica)) %>%
-  left_join(dados_escolas, by = "Nome_Escola")
-
-notas_escolas_par <- escolas_par %>%
-  group_by(Nome_Escola) %>% 
-  summarise(media_nota_redacao = mean(Nota_Redacao),
-            media_nota_matematica = mean(Nota_Matematica)) %>%
-  left_join(dados_escolas, by = "Nome_Escola")
-
-# Adicionando colunas 'gasto_por_aluno'
-notas_escolas_pub <- notas_escolas_pub %>%
-  mutate(gasto_por_aluno = Orcamento_Anual / Numero_Alunos)
-notas_escolas_par <- notas_escolas_par %>%
-  mutate(gasto_por_aluno = Orcamento_Anual / Numero_Alunos)
-
-# Unindo dataframes
-ambos <- as.data.frame(bind_rows(notas_escolas_pub, notas_escolas_par))
-ambos
-# View(ambos)
+## Perguntas - Parte 2:
 
 
-# Definindo um limiar para alta performance (exemplo: média das notas >= 80)
-limiar_alta_performance <- 80
-
-# Identificando escolas de alta performance
-escolas_alta_performance <- ambos %>%
-  filter(media_nota_redacao >= limiar_alta_performance & media_nota_matematica >= limiar_alta_performance)
-
-# Analisando escolas de alta performance
-summary(escolas_alta_performance)
-
-# Verificando a relação entre gasto por aluno e alta performance
-cor.test(escolas_alta_performance$gasto_por_aluno, escolas_alta_performance$media_nota_matematica)
-cor.test(escolas_alta_performance$gasto_por_aluno, escolas_alta_performance$media_nota_redacao)
-
-# Verificando a distribuição de escolas públicas e particulares entre as de alta performance
-table(escolas_alta_performance$Tipo_Escola)
-
-# Resposta -> O Tipo da Escola. Neste caso é o Tipo Particular.
+# 11) Entre os alunos aprovados em Redação, qual gênero obteve maior número de aprovações?
 
 
 
 
-# 13) Escolas (públicas ou particulares) com orçamentos mais altos tem alunos com melhores resultados nos testes de Matemática e Redação?
 
-# Correlação entre o orçamento anual e a média das notas em Redação
-cor_orcamento_redacao <- cor.test(ambos$Orcamento_Anual, ambos$media_nota_redacao, method = "pearson")
-print(cor_orcamento_redacao)
-
-# Correlação entre o orçamento anual e a média das notas em Matemática
-cor_orcamento_matematica <- cor.test(ambos$Orcamento_Anual, ambos$media_nota_matematica, method = "pearson")
-print(cor_orcamento_matematica)
-
-# Correlação entre o gasto por aluno e a média das notas em Redação
-cor_gasto_redacao <- cor.test(ambos$gasto_por_aluno, ambos$media_nota_redacao, method = "pearson")
-print(cor_gasto_redacao)
-
-# Correlação entre o gasto por aluno e a média das notas em Matemática
-cor_gasto_matematica <- cor.test(ambos$gasto_por_aluno, ambos$media_nota_matematica, method = "pearson")
-print(cor_gasto_matematica)
-
-# Resposta -> Esses resultados sugerem que, contrariamente ao que se poderia esperar, escolas com maiores orçamentos ou maiores gastos por aluno 
-#             não necessariamente formam alunos com melhores resultados nos testes de Matemática e Redação.
-
-
-
-# 14) O tamanho da escola (pequeno, médio e grande porte) influencia na performance escolar do aluno?
+# 12) Entre os alunos aprovados em Matemática, qual gênero obteve maior número de aprovações?
 
 
 
 
-# 15) Em qual tipo de escola (pública ou particular) há maior índice de aprovação? (aprovaçãp = nota >= 70)
 
-# Nas escolas públicas:
-# - Aproximadamente 80.91% dos alunos foram aprovados em Redação.
-# - Aproximadamente 66.52% dos alunos foram aprovados em Matemática.
-# - Aproximadamente 53.7% dos alunos foram aprovados tanto em Redação quanto em Matemática.
+# 13) Quais os tipos de todas as escolas em nossa base de dados?
 
-# Nas escolas particulares:
-# - Aproximadamente 96.64% dos alunos foram aprovados em Redação.
-# - Aproximadamente 93.7% dos alunos foram aprovados em Matemática.
-# - Aproximadamente 90.55% dos alunos foram aprovados tanto em Redação quanto em Matemática.
 
-# Resposta -> As escolas particulares tem um maior índice de aprovação em comparação com as escolas públicas, tanto em Redação quanto em Matemática.
+
+
+
+# 14) Qual o total de estudantes por escola?
+
+
+
+
+
+# 15) Qual o total de orçamento de cada escola per capita (por estudante)?
+
+
+
+
+
+# 16) Em qual tipo de escola (pública ou particular) há maior índice de aprovação?
+
+
+
+
+
+# 17) Qual a nota média dos alunos em Redação para cada escola?
+
+
+
+
+
+# 18) Qual a nota média dos alunos em Matemática para cada escola?
+
+
+
+
+
+# 19) Considerando somente os alunos aprovados em Redação, qual a média de alunos aprovados por escola?
+
+
+
+
+
+# 20) Considerando somente os alunos aprovados em Matemática, qual a média de alunos aprovados por escola??
+
+
+
+
+
+# 21) Considerando alunos aprovados em Matemática e Redação, qual foi a média de alunos aprovados por escola?
+
+
+
+
+
+# 22) Considerando a taxa geral de aprovados, quais as 5 escolas com melhor performance?
+
+
+
+
+
+# 23) Em cada série, qual escola teve os alunos com melhor performance em Matemática?
+
+
+
+
+
+# 24) Considerando as faixas de gastos por estudante como sendo: [0, 585, 630, 645, 680], qual faixa resulta em estudantes com melhor performance?
+
+
+
+
+
+# 25) Considerando as faixas de tamanho (número de alunos) das escolas como sendo: [0, 1000, 2000, 5000], qual faixa resulta em estudantes com melhor 
+#     performance?
+
+
+
+
+# 26) Qual o impacto do tipo de escola na performance dos alunos?
+
+
+
+
