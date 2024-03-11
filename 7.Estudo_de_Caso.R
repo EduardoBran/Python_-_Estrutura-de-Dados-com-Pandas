@@ -25,7 +25,7 @@ library(dplyr)          # manipula arquivos
 # - No total serão respondidas perguntas de negócio que vão requerer analisar os dados por diferentes perspectivas.
 
 
-## Perguntas - Parte 1:
+### Perguntas - Parte 1:
 
 #   1) Temos dados de quantas escolas?
 #   2) Qual o total de registros de estudantes na base de dados?
@@ -87,9 +87,9 @@ summary(dados_full)
 
 
 
-## Respondendo as Perguntas - Parte 1:
+### Respondendo as Perguntas - Parte 1:
 
-# 1) Temos dados de quantas escolas?
+## 1) Temos dados de quantas escolas?
 
 str(dados_full$Nome_Escola)
 summary(dados_full$Nome_Escola)
@@ -100,7 +100,7 @@ length(unique(dados_full$Nome_Escola))
 
 
 
-# 2) Qual o total de registros de estudantes na base de dados?
+## 2) Qual o total de registros de estudantes na base de dados?
 
 length(unique(dados_full$ID_Estudante))
 
@@ -109,7 +109,7 @@ length(unique(dados_full$ID_Estudante))
 
 
 
-# 3) Qual o orçamento total considerando todas as escolas?
+## 3) Qual o orçamento total considerando todas as escolas?
 
 # Usando dataset dados_escolas
 sum(dados_escolas$Orcamento_Anual)
@@ -126,7 +126,7 @@ rm(orcamento_total)
 
 
 
-# 4) Qual a média da nota dos alunos em Redação?
+## 4) Qual a média da nota dos alunos em Redação?
 
 mean(dados_full$Nota_Redacao)
 summary(dados_full$Nota_Redacao)
@@ -136,7 +136,7 @@ summary(dados_full$Nota_Redacao)
 
 
 
-# 5) Qual a média da nota dos alunos em Matemática?
+## 5) Qual a média da nota dos alunos em Matemática?
 
 mean(dados_full$Nota_Matematica)
 summary(dados_full$Nota_Matematica)
@@ -146,7 +146,7 @@ summary(dados_full$Nota_Matematica)
 
 
 
-# 6) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Redação? (Entregue o resultado em valor absoluto e percentual)
+## 6) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Redação? (Entregue o resultado em valor absoluto e percentual)
 
 # quantidade
 aprovados_redacao <- dados_full %>% 
@@ -164,7 +164,7 @@ percentual_redacao                                                  # 85.80%
 
 
 
-# 7) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática? (Entregue o resultado em valor absoluto e percentual)
+## 7) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática? (Entregue o resultado em valor absoluto e percentual)
 
 # quantidade
 aprovados_mat <- dados_full %>% 
@@ -183,8 +183,8 @@ rm(aprovados, percentual)
 
 
 
-# 8) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática e Redação? (Entregue o resultado em valor absoluto e
-#    percentual)
+## 8) Considerando que a nota de aprovação é 70, quantos alunos foram aprovados em Matemática e Redação? (Entregue o resultado em valor absoluto e
+##    percentual)
 
 # quantidade
 aprovados <- dados_full %>% 
@@ -202,7 +202,7 @@ percentual                                          # 65.16%
 
 
 
-# 9) Crie um dataframe com os resultados das questões de 1 a 8 que você calculou acima.
+## 9) Crie um dataframe com os resultados das questões de 1 a 8 que você calculou acima.
 
 r1 = length(unique(dados_full$Nome_Escola))
 r2 = length(unique(dados_full$ID_Estudante))
@@ -235,7 +235,7 @@ rm(aprovados_redacao, percentual_redacao, aprovados_mat, percentual_mat, aprovad
 
 df
 
-# 10) Formate as colunas "Total de Estudantes" e "Total Orçamento" ajustando as casas decimais.
+## 10) Formate as colunas "Total de Estudantes" e "Total Orçamento" ajustando as casas decimais.
 
 df$Total_Estudantes <- formatC(df$Total_Estudantes, format = "d", big.mark = ",")
 df$Orcamento_Total_Escolas <- formatC(df$Orcamento_Total_Escolas, format = "f", big.mark = ",", digits = 2)
@@ -245,7 +245,7 @@ df
 
 
 
-## Criando e Visualizando Um Novo Dataset
+### Criando e Visualizando Um Novo Dataset com dados estatísticos
 
 # Visualizando os Dados
 View(dados_full)
@@ -395,82 +395,253 @@ View(dados_escolares)
 
 
 
-## Perguntas - Parte 2:
+### Perguntas - Parte 2:
 
 
-# 11) Entre os alunos aprovados em Redação, qual gênero obteve maior número de aprovações?
+## 11) Entre os alunos aprovados em Redação, qual gênero obteve maior número de aprovações?
 
+aprovados_genero_red <- dados_full %>% 
+  filter(Nota_Redacao >= 70)
 
+table(aprovados_genero_red$Genero)
+rm(aprovados_genero_red)
 
-
-
-# 12) Entre os alunos aprovados em Matemática, qual gênero obteve maior número de aprovações?
-
-
-
-
-
-# 13) Quais os tipos de todas as escolas em nossa base de dados?
+# Resposta -> Feminino: 17027 e Masculino: 16573. O gênero feminino obteve o maior número de aprovações.
 
 
 
 
+## 12) Entre os alunos aprovados em Matemática, qual gênero obteve maior número de aprovações?
 
-# 14) Qual o total de estudantes por escola?
+aprovados_genero_mat <- dados_full %>% 
+  filter(Nota_Matematica >= 70)
 
+table(aprovados_genero_mat$Genero)
+rm(aprovados_genero_mat)
 
-
-
-
-# 15) Qual o total de orçamento de cada escola per capita (por estudante)?
+# Resposta -> Feminino: 14835 e Masculino: 14525 O gênero feminino obteve o maior número de aprovações.
 
 
 
 
 
-# 16) Em qual tipo de escola (pública ou particular) há maior índice de aprovação?
+## 13) Quais os tipos de todas as escolas em nossa base de dados?
+
+str(dados_full$Tipo_Escola)
+
+# Resposta -> Pública e Particular.
 
 
 
 
 
-# 17) Qual a nota média dos alunos em Redação para cada escola?
+## 14) Qual o total de estudantes por escola?
+
+table(dados_full$Nome_Escola)
+
+# Resposta -> Está no terminal.
 
 
 
 
 
-# 18) Qual a nota média dos alunos em Matemática para cada escola?
+## 15) Qual o total de orçamento de cada escola per capita (por estudante)?
+
+# orcamento_per_capita_escola_A = dados_escolas[[5]][1] / dados_escolas[[4]][1]
+# print(paste('Orçamento Per Capita Escola A: ', orcamento_per_capita_escola_A))
+# orcamento_per_capita_escola_B = dados_escolas[[5]][2] / dados_escolas[[4]][2]
+# print(paste('Orçamento Per Capita Escola B: ', orcamento_per_capita_escola_B))
+# orcamento_per_capita_escola_C = dados_escolas[[5]][3] / dados_escolas[[4]][3]
+# print(paste('Orçamento Per Capita Escola C: ', orcamento_per_capita_escola_C))
+# orcamento_per_capita_escola_D = dados_escolas[[5]][4] / dados_escolas[[4]][4]
+# print(paste('Orçamento Per Capita Escola D: ', orcamento_per_capita_escola_D))
+# orcamento_per_capita_escola_E = dados_escolas[[5]][5] / dados_escolas[[4]][5]
+# print(paste('Orçamento Per Capita Escola E: ', orcamento_per_capita_escola_E))
+# orcamento_per_capita_escola_F = dados_escolas[[5]][6] / dados_escolas[[4]][6]
+# print(paste('Orçamento Per Capita Escola F: ', orcamento_per_capita_escola_F))
+# orcamento_per_capita_escola_G = dados_escolas[[5]][7] / dados_escolas[[4]][7]
+# print(paste('Orçamento Per Capita Escola G: ', orcamento_per_capita_escola_G))
+# orcamento_per_capita_escola_H = dados_escolas[[5]][8] / dados_escolas[[4]][8]
+# print(paste('Orçamento Per Capita Escola H: ', orcamento_per_capita_escola_H))
+# orcamento_per_capita_escola_I = dados_escolas[[5]][9] / dados_escolas[[4]][9]
+# print(paste('Orçamento Per Capita Escola I: ', orcamento_per_capita_escola_I))
+# orcamento_per_capita_escola_J = dados_escolas[[5]][10] / dados_escolas[[4]][10]
+# print(paste('Orçamento Per Capita Escola J: ', orcamento_per_capita_escola_J))
+# orcamento_per_capita_escola_K = dados_escolas[[5]][11] / dados_escolas[[4]][11]
+# print(paste('Orçamento Per Capita Escola K: ', orcamento_per_capita_escola_K))
+# orcamento_per_capita_escola_L = dados_escolas[[5]][12] / dados_escolas[[4]][12]
+# print(paste('Orçamento Per Capita Escola L: ', orcamento_per_capita_escola_L))
+# orcamento_per_capita_escola_M = dados_escolas[[5]][13] / dados_escolas[[4]][13]
+# print(paste('Orçamento Per Capita Escola M: ', orcamento_per_capita_escola_M))
+# orcamento_per_capita_escola_N = dados_escolas[[5]][14] / dados_escolas[[4]][14]
+# print(paste('Orçamento Per Capita Escola N: ', orcamento_per_capita_escola_N))
+# orcamento_per_capita_escola_O = dados_escolas[[5]][15] / dados_escolas[[4]][15]
+# print(paste('Orçamento Per Capita Escola O: ', orcamento_per_capita_escola_O))
+
+
+# Otimizando código acima
+for (i in 1:nrow(dados_escolas)) {
+  orcamento_per_capita <- dados_escolas$Orcamento_Anual[i] / dados_escolas$Numero_Alunos[i]
+  cat("Orçamento Per Capita", dados_escolas$Nome_Escola[i], ": ", round(orcamento_per_capita, 2), "\n")
+}
+rm(i)
+
+# Resposta -> Está no terminal.
+
+
+
+
+## Adicionando Coluna Orcamento_Por_Estudante ao dataframe dados_escolas
+dados_escolas$Orcamento_Por_Estudante <- dados_escolas$Orcamento_Anual / dados_escolas$Numero_Alunos
+dados_escolas
 
 
 
 
 
-# 19) Considerando somente os alunos aprovados em Redação, qual a média de alunos aprovados por escola?
+## 16) Em qual tipo de escola (pública ou particular) há maior índice de aprovação?
+
+# Verificando quantidade de alunos em Escolas Pública e Particular
+escola_pub_total <- dados_full %>% 
+  filter(Tipo_Escola == 'Publica') %>% 
+  count()
+escola_par_total <- dados_full %>% 
+  filter(Tipo_Escola == 'Particular') %>% 
+  count()
+
+# Verificando a quantidade total de aprovados por tipo de escola (levando em consideração que aprovados = notas de ambas as matérias acima de 70)
+aprovados_pub <- dados_full %>% 
+  filter(Tipo_Escola == 'Publica',
+         Nota_Redacao >= 70,
+         Nota_Matematica >= 70) %>% 
+  count()
+aprovados_par <- dados_full %>% 
+  filter(Tipo_Escola == 'Particular',
+         Nota_Redacao >= 70,
+         Nota_Matematica >= 70) %>% 
+  count()
+
+# Verificando índice de aprovação
+indice_aprovacao_pub <- (aprovados_pub / escola_pub_total) * 100   
+indice_aprovacao_par <- (aprovados_par / escola_par_total) * 100
+indice_aprovacao_pub    # 53.69
+indice_aprovacao_par    # 90.55
+
+rm(escola_pub_total, escola_par_total, aprovados_pub, aprovados_par, indice_aprovacao_pub, indice_aprovacao_par)
+
+# Resposta -> O índice de aprovação da escola pública é cerca de 53.70% de aprovação, enquanto o índice da escola particular é cerca de 90.55%.
+#             Portanto o maior índice de aprovação ocorre nas escolas do tipo particular.
 
 
 
 
 
-# 20) Considerando somente os alunos aprovados em Matemática, qual a média de alunos aprovados por escola??
+## 17) Qual a nota média dos alunos em Redação para cada escola?
+
+media_redacao_por_escola <- dados_full %>% 
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_redacao = mean(Nota_Redacao))
+media_redacao_por_escola
+rm(media_redacao_por_escola)
+
+# Resposta -> Está no terminal.
+
+
+
+
+
+## 18) Qual a nota média dos alunos em Matemática para cada escola?
+
+media_matematica_por_escola <- dados_full %>% 
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_matematica = mean(Nota_Matematica))
+media_matematica_por_escola
+rm(media_matematica_por_escola)
+
+# Resposta -> Está no terminal.
+
+
+
+
+
+## 19) Considerando somente os alunos aprovados em Redação, qual a média de alunos aprovados por escola?
+
+media_aprovados_red_por_escola <- dados_full %>%
+  filter(Nota_Redacao >= 70) %>% 
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_redacao = mean(Nota_Redacao))
+media_aprovados_red_por_escola
+rm(media_aprovados_red_por_escola)
+
+# Resposta -> Está no terminal.
+
+
+
+
+## 20) Considerando somente os alunos aprovados em Matemática, qual a média de alunos aprovados por escola?
+
+media_aprovados_mat_por_escola <- dados_full %>%
+  filter(Nota_Matematica >= 70) %>% 
+  group_by(Nome_Escola) %>% 
+  summarise(media_nota_matematica = mean(Nota_Matematica))
+media_aprovados_mat_por_escola
+rm(media_aprovados_mat_por_escola)
+
+# Resposta -> Está no terminal.
 
 
 
 
 
 # 21) Considerando alunos aprovados em Matemática e Redação, qual foi a média de alunos aprovados por escola?
+media_aprovados_por_escola <- dados_full %>%
+  filter(Nota_Matematica >= 70,
+         Nota_Redacao >= 70) %>% 
+  group_by(Nome_Escola) %>% 
+  summarise(media_notas_aprovados = mean(Nota_Matematica + Nota_Redacao) / 2)
+media_aprovados_por_escola
+rm(media_aprovados_mat_por_escola)
+
+# Resposta -> Está no terminal.
 
 
 
 
 
 # 22) Considerando a taxa geral de aprovados, quais as 5 escolas com melhor performance?
+total_aprovados_por_escola <- dados_full %>%
+  filter(Nota_Matematica >= 70,
+         Nota_Redacao >= 70) %>% 
+  group_by(Nome_Escola) %>% 
+  count() %>% 
+  arrange(desc(n))
+total_aprovados_por_escola
+rm(total_aprovados_por_escola)
+
+# Resposta -> Escola H, M, D, L e F
 
 
 
 
 
 # 23) Em cada série, qual escola teve os alunos com melhor performance em Matemática?
+
+performance_por_serie_mat <- dados_full %>% 
+  filter(Nota_Matematica >= 70,
+         Nota_Redacao >= 70) %>% 
+  group_by(Serie, Nome_Escola) %>% 
+  summarise(media_nota_matematica = mean(Nota_Matematica), .groups = "drop")
+performance_por_serie_mat
+
+melhor_performance_por_serie_mat <- performance_por_serie_mat %>% 
+  group_by(Serie) %>% 
+  slice_max(media_nota_matematica, n = 1)
+
+melhor_performance_por_serie_mat
+
+rm(performance_por_serie_mat, melhor_performance_por_serie_mat)
+
+# Resposta -> Serie 6 - Escola I. Serie 7 - Escola E. Serie 8 - Escola I. Serie 9 - Escola J
 
 
 
