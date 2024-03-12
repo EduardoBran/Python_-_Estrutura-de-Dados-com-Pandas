@@ -593,7 +593,7 @@ rm(media_aprovados_mat_por_escola)
 
 
 
-# 21) Considerando alunos aprovados em Matemática e Redação, qual foi a média de alunos aprovados por escola?
+## 21) Considerando alunos aprovados em Matemática e Redação, qual foi a média de alunos aprovados por escola?
 media_aprovados_por_escola <- dados_full %>%
   filter(Nota_Matematica >= 70,
          Nota_Redacao >= 70) %>% 
@@ -608,7 +608,7 @@ rm(media_aprovados_mat_por_escola)
 
 
 
-# 22) Considerando a taxa geral de aprovados, quais as 5 escolas com melhor performance?
+## 22) Considerando a taxa geral de aprovados, quais as 5 escolas com melhor performance?
 total_aprovados_por_escola <- dados_full %>%
   filter(Nota_Matematica >= 70,
          Nota_Redacao >= 70) %>% 
@@ -624,7 +624,7 @@ rm(total_aprovados_por_escola)
 
 
 
-# 23) Em cada série, qual escola teve os alunos com melhor performance em Matemática?
+## 23) Em cada série, qual escola teve os alunos com melhor performance em Matemática?
 
 performance_por_serie_mat <- dados_full %>% 
   filter(Nota_Matematica >= 70,
@@ -647,19 +647,72 @@ rm(performance_por_serie_mat, melhor_performance_por_serie_mat)
 
 
 
-# 24) Considerando as faixas de gastos por estudante como sendo: [0, 585, 630, 645, 680], qual faixa resulta em estudantes com melhor performance?
+## 24) Considerando as faixas de gastos por estudante como sendo: [0, 585, 630, 645, 680], qual faixa resulta em estudantes com melhor performance?
+
+head(dados_full)
+head(dados_escolas)
+str(dados_full)
+summary(dados_full)
+
+dados_full <- TESTE
+
+
+## Adicionando Colunas
+
+# Adicionando coluna Media_Notas
+dados_full$Media_Notas <- (dados_full$Nota_Redacao + dados_full$Nota_Matematica) / 2
+
+# Adicionando Coluna Orcamento_Per_Capita de dados_escolares em dados_full
+dados_full$Numero_Alunos <- as.integer(as.character(dados_full$Numero_Alunos))
+dados_full$Orcamento_Per_Capita <- dados_full$Orcamento_Anual / dados_full$Numero_Alunos
+
+#dados_full <- merge(dados_full, dados_escolas[, c("Nome_Escola", "Orcamento_Por_Estudante")],   # adiciona direto de dados_escolares
+#                    by = "Nome_Escola", all.x = TRUE)
+
+# dados_full$Orcamento_Per_Capita <- as.factor(dados_full$Orcamento_Per_Capita)
+
+# Adicionando Coluna Faixa_Gastos_Per_Capita com as faixas do enunciado
+dados_full$Faixa_Gastos_Per_Capita <- cut(dados_full$Orcamento_Per_Capita,
+                                          breaks = c(0, 585, 630, 645, 680),
+                                          labels = c("[0,585]", "[586,630]", "[631,645]", "[646,680]"),
+                                          include.lowest = TRUE)
+
+
+# Calculando a performance bom base nas faixas de gastos
+calculando_performance_faixa <- dados_full %>%
+  group_by(Faixa_Gastos_Per_Capita) %>% 
+  summarise(media_performance = mean(Media_Notas)) %>% 
+  arrange(desc(media_performance))
+calculando_performance_faixa
+
+# Resposta -> A faixa 0 a 585 possui a melhor performance.
 
 
 
 
 
-# 25) Considerando as faixas de tamanho (número de alunos) das escolas como sendo: [0, 1000, 2000, 5000], qual faixa resulta em estudantes com melhor 
-#     performance?
+## 25) Considerando as faixas de tamanho (número de alunos) das escolas como sendo: [0, 1000, 2000, 5000], qual faixa resulta em estudantes com melhor 
+##     performance?
+
+# Adicionando Coluna Faixa_De_Qtd_Alunos com as faixas do enunciado
+dados_full$Faixa_De_Qtd_Alunos <- cut(dados_full$Numero_Alunos,
+                                      breaks = c(0, 1000, 2000, 5000),
+                                      labels = c("[0, 1000]", "[1001, 2000]", "[2001, 5000]"),
+                                      include.lowest = TRUE)
+
+# Calculando a performance bom base nas faixas de quantidade de alunos
+calculando_performance_qtd_alunos <- dados_full %>% 
+  group_by(Faixa_De_Qtd_Alunos) %>% 
+  summarise(media_performance = mean(Media_Notas)) %>% 
+  arrange(desc(media_performance))
+calculando_performance_qtd_alunos
+
+# Resposta -> A faixa 0 a 1000 possui a melhor performance.
 
 
 
 
-# 26) Qual o impacto do tipo de escola na performance dos alunos?
+## 26) Qual o impacto do tipo de escola na performance dos alunos?
 
 
 
